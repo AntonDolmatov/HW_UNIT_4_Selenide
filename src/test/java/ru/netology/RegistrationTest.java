@@ -8,6 +8,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
@@ -29,7 +31,7 @@ public class RegistrationTest {
         $("[data-test-id='agreement']").click();
         $("button.button").click();
         $(".notification__content")
-                .shouldBe(Condition.visible, Duration.ofSeconds(15))
+                .shouldBe(visible, Duration.ofSeconds(15))
                 .shouldHave(Condition.exactText("Встреча успешно забронирована на " + planningDate));
     }
     @Test
@@ -43,8 +45,6 @@ public class RegistrationTest {
         $("[data-test-id='phone'] input").setValue("+79012345678");
         $("[data-test-id='agreement']").click();
         $("button.button").click();
-        $(".notification__content")
-                .shouldBe(Condition.visible, Duration.ofSeconds(15))
-                .shouldHave(Condition.exactText("Доставка в выбранный город недоступна"));
+        $(withText("Доставка в выбранный город недоступна")).should(visible, Duration.ofSeconds(15));
     }
 }
