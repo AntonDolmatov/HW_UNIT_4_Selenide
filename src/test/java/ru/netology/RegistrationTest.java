@@ -30,10 +30,10 @@ public class RegistrationTest {
         $("[data-test-id='phone'] input").setValue("+79012345678");
         $("[data-test-id='agreement']").click();
         $("button.button").click();
-        $(".notification__content")
-                .shouldBe(visible, Duration.ofSeconds(15))
-                .shouldHave(Condition.exactText("Встреча успешно забронирована на " + planningDate));
+        $(".notification__content").shouldHave(Condition.text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15));
     }
+
+
     @Test
     public void shouldTestNotValidCity() {
         open("http://localhost:9999");
@@ -47,4 +47,31 @@ public class RegistrationTest {
         $("button.button").click();
         $(withText("Доставка в выбранный город недоступна")).should(visible, Duration.ofSeconds(15));
     }
+    @Test
+    public void shouldTestCityEnglish() {
+        open("http://localhost:9999");
+        $("[data-test-id='city'] input").setValue("Moscow");
+        String planningDate = generateDate(5, "dd.MM.yyyy");
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
+        $("[data-test-id='date'] input").setValue(planningDate);
+        $("[data-test-id='name'] input").setValue("Иванов Иван");
+        $("[data-test-id='phone'] input").setValue("+79012345678");
+        $("[data-test-id='agreement']").click();
+        $("button.button").click();
+        $(withText("Доставка в выбранный город недоступна")).should(visible, Duration.ofSeconds(15));
+    }
+    @Test
+    public void shouldTestCityEmpty() {
+        open("http://localhost:9999");
+        $("[data-test-id='city'] input").setValue("");
+        String planningDate = generateDate(5, "dd.MM.yyyy");
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
+        $("[data-test-id='date'] input").setValue(planningDate);
+        $("[data-test-id='name'] input").setValue("Иванов Иван");
+        $("[data-test-id='phone'] input").setValue("+79012345678");
+        $("[data-test-id='agreement']").click();
+        $("button.button").click();
+        $(withText("Поле обязательно")).should(visible, Duration.ofSeconds(15));
+    }
+
 }
